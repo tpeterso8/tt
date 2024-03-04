@@ -4,7 +4,7 @@
 //_\SV
    // Include Tiny Tapeout Lab.
    // Included URL: "https://raw.githubusercontent.com/os-fpga/Virtual-FPGA-Lab/35e36bd144fddd75495d4cbc01c4fc50ac5bde6f/tlv_lib/tiny_tapeout_lib.tlv"// Included URL: "https://raw.githubusercontent.com/os-fpga/Virtual-FPGA-Lab/a069f1e4e19adc829b53237b3e0b5d6763dc3194/tlv_lib/fpga_includes.tlv"
-`line 69 "top.tlv" 1
+`line 99 "top.tlv" 1
 
 //_\SV
 
@@ -79,7 +79,7 @@ module tt_um_template (
       assign L0_sseg_decimal_point_n_a0 = ~ uo_out[7];
       assign L0_sseg_digit_n_a0[7:0] = 8'b11111110;
    //_\end_source
-   `line 138 "top.tlv" 2
+   `line 168 "top.tlv" 2
 
    // Instantiate the Virtual FPGA Lab.
    `line 308 "/raw.githubusercontent.com/osfpga/VirtualFPGALab/a069f1e4e19adc829b53237b3e0b5d6763dc3194/tlvlib/fpgaincludes.tlv" 1
@@ -145,14 +145,44 @@ module tt_um_template (
             `line 49 "top.tlv" 1
             
                assign FpgaPins_Fpga_reset_a0 = reset;
-               assign FpgaPins_Fpga_btn_a0[3:0] = ui_in[3:0];
+            
+               assign FpgaPins_Fpga_cntbtn_a0[3:0] = ui_in[0];
+            
+               assign FpgaPins_Fpga_cnt_a0[3:0] = FpgaPins_Fpga_reset_a0 ? 0 : (FpgaPins_Fpga_cnt_a1 + ui_in[0]);
+            
+               //$btn[3:0] = *ui_in[3:1];
+            
+               //$sel_digit = *clk;
+            
+               //$tens[6:0] = 7'b0000110;
+               //$ones[6:0] = 7'b1001111;
+               assign FpgaPins_Fpga_digit_a0[3:0] = FpgaPins_Fpga_cnt_a0[3:0];
             
                assign uo_out[7:0] =
-                  FpgaPins_Fpga_btn_a0[0] ? 8'b00111111 :
-                  FpgaPins_Fpga_btn_a0[1] ? 8'b00000110 :
-                  FpgaPins_Fpga_btn_a0[2] ? 8'b01011011 :
-                  FpgaPins_Fpga_btn_a0[3] ? 8'b01001111 :
-                            8'b10000000;
+                          FpgaPins_Fpga_digit_a0 == 4'h0
+                             ? 8'b00111111:
+                          FpgaPins_Fpga_digit_a0 == 4'h1
+                             ? 8'b00000110:
+                          FpgaPins_Fpga_digit_a0 == 4'h2
+                             ? 8'b01011011:
+                          FpgaPins_Fpga_digit_a0 == 4'h3
+                             ? 8'b01001111:
+                          FpgaPins_Fpga_digit_a0 == 4'h4
+                             ? 8'b01100110:
+                          FpgaPins_Fpga_digit_a0 == 4'h5
+                             ? 8'b01101101:
+                          FpgaPins_Fpga_digit_a0 == 4'h6
+                             ? 8'b01111101:
+                          FpgaPins_Fpga_digit_a0 == 4'h7
+                             ? 8'b00000111:
+                          FpgaPins_Fpga_digit_a0 == 4'h8
+                             ? 8'b01111111:
+                          FpgaPins_Fpga_digit_a0 == 4'h9
+                             ? 8'b01101111:
+                          8'b00000110;
+            
+            
+               //$sel_digit ? {1, $tens} : {0, $ones};
             
                // Note that pipesignals assigned here can be found under /fpga_pins/fpga.
             
@@ -285,7 +315,7 @@ module tt_um_template (
       // pushbuttons
       
    //_\end_source
-   `line 141 "top.tlv" 2
+   `line 171 "top.tlv" 2
    // Label the switch inputs [0..7] (1..8 on the physical switch panel) (top-to-bottom).
    `line 83 "/raw.githubusercontent.com/osfpga/VirtualFPGALab/35e36bd144fddd75495d4cbc01c4fc50ac5bde6f/tlvlib/tinytapeoutlib.tlv" 1
       for (input_label = 0; input_label <= 7; input_label++) begin : L1_InputLabel //_/input_label
@@ -307,7 +337,7 @@ module tt_um_template (
 
          end
    //_\end_source
-   `line 143 "top.tlv" 2
+   `line 173 "top.tlv" 2
 
 //_\SV
 endmodule
